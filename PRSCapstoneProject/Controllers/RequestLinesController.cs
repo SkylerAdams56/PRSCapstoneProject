@@ -25,6 +25,7 @@ namespace PRSCapstoneProject.Controllers
         private async Task<IActionResult> RecalculateRequestTotal(int requestId)
         {
             var request = await _context.Requests.FindAsync(requestId);
+            
 
             request.Total = (from rl in _context.RequestLines
                              join p in _context.Products
@@ -74,6 +75,7 @@ namespace PRSCapstoneProject.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await RecalculateRequestTotal(requestLine.RequestId);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -97,7 +99,7 @@ namespace PRSCapstoneProject.Controllers
         {
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
-
+            await RecalculateRequestTotal(requestLine.RequestId);
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
 
@@ -113,7 +115,7 @@ namespace PRSCapstoneProject.Controllers
 
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-
+            await RecalculateRequestTotal(requestLine.RequestId);
             return NoContent();
         }
 
