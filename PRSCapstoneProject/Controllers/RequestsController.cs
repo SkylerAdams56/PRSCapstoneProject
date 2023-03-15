@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.EntityFrameworkCore;
 using PRSCapstoneProject.Models;
 
@@ -20,6 +21,13 @@ namespace PRSCapstoneProject.Controllers
             _context = context;
         }
 
+
+        //Skyler, the only issue is not getting the virtual instances when
+        //reading for all the requests or by by id.You should be including the
+        //USER in both GET methods and you should also include the Requestlines in
+        //the get by id along with the Products for the Requestline.
+
+
         //Getting requests in review status that are not from the user: api/requests/reviews/{userId}
         [HttpGet("reviews/{userId}")]
         public async Task<List<Request>> GetReviews(int userId)
@@ -27,7 +35,7 @@ namespace PRSCapstoneProject.Controllers
             var request = await _context.Requests
                 .Where(r => r.Status == "REVIEW" && r.UserId != userId)
                 .ToListAsync();
-
+                
             return request;
         }
 
@@ -35,7 +43,9 @@ namespace PRSCapstoneProject.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
-            return await _context.Requests.ToListAsync();
+            return await _context.Requests
+                .Include(r => r.User)
+                .ToListAsync();
         }
 
         // GET: api/Requests/5
@@ -43,7 +53,10 @@ namespace PRSCapstoneProject.Controllers
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
             var request = await _context.Requests.FindAsync(id);
-
+            var request = await _context.Requests.Include(x=>x.User)
+                                                      .Include(x=>x.RequestLines)
+                                                      .ToListAsync();                   
+            
             if (request == null)
             {
                 return NotFound();

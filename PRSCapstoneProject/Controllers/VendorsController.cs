@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
 using PRSCapstoneProject.Models;
 
 namespace PRSCapstoneProject.Controllers
@@ -19,7 +20,6 @@ namespace PRSCapstoneProject.Controllers
         {
             _context = context;
         }
-
         // GET: api/Vendors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vendor>>> GetVendors()

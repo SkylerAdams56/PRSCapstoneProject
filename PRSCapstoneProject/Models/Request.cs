@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -23,6 +24,5 @@ namespace PRSCapstoneProject.Models
         public int UserId { get; set; }
         public virtual User? User { get; set; }
         public virtual ICollection<RequestLine>? RequestLines { get; set; }
-
     }
 }
