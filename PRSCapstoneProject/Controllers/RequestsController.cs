@@ -52,10 +52,10 @@ namespace PRSCapstoneProject.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
-            var request = await _context.Requests.FindAsync(id);
-            var request = await _context.Requests.Include(x=>x.User)
-                                                      .Include(x=>x.RequestLines)
-                                                      .ToListAsync();                   
+            var request = await _context.Requests.Include(x => x.User)
+                                                 .Include(x => x.RequestLines)
+                                                 .ThenInclude(x => x.Product)
+                                                 .SingleOrDefaultAsync(i=>i.Id==id);
             
             if (request == null)
             {
