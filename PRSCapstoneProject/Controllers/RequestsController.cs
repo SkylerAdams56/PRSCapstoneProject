@@ -54,8 +54,8 @@ namespace PRSCapstoneProject.Controllers
         {
             var request = await _context.Requests.Include(x => x.User)
                                                  .Include(x => x.RequestLines)
-                                                 .ThenInclude(x => x.Product)
-                                                 .SingleOrDefaultAsync(i=>i.Id==id);
+                                                 .ThenInclude(x=>x.Product)
+                                                 .SingleOrDefaultAsync(i => i.Id == id);
             
             if (request == null)
             {
