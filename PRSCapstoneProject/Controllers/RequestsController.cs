@@ -21,13 +21,6 @@ namespace PRSCapstoneProject.Controllers
             _context = context;
         }
 
-
-        //Skyler, the only issue is not getting the virtual instances when
-        //reading for all the requests or by by id.You should be including the
-        //USER in both GET methods and you should also include the Requestlines in
-        //the get by id along with the Products for the Requestline.
-
-
         //Getting requests in review status that are not from the user: api/requests/reviews/{userId}
         [HttpGet("reviews/{userId}")]
         public async Task<List<Request>> GetReviews(int userId)
