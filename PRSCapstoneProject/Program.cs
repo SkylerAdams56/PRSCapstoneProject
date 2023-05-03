@@ -7,9 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+var connStrKey = "PrsDbContext";
+
+#if DEBUG
+connStrKey += "Local";
+#endif
+
+
 builder.Services.AddDbContext<PRSDbContext>( x=> 
 {
-    x.UseSqlServer(builder.Configuration.GetConnectionString("PRSDbContext"));
+    x.UseSqlServer(builder.Configuration.GetConnectionString(connStrKey), x => x.EnableRetryOnFailure());
 });
 builder.Services.AddCors();
 

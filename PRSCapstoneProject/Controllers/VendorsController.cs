@@ -21,57 +21,6 @@ namespace PRSCapstoneProject.Controllers
             _context = context;
         }
 
-        //Creating PoLines
-
-        [HttpGet("po/{vendorId}")]
-        public async Task<ActionResult<Po>> CreatePo(int vendorId)
-        {
-            var po = new Po();
-            var vendor = await _context.Vendors.FindAsync(vendorId);
-
-            if (vendor == null)
-            {
-                return NotFound();
-            }
-
-            po.Vendor = vendor;
-            var lines = from p in _context.Products
-                        join rl in _context.RequestLines on p.Id equals rl.ProductId
-                        join r in _context.Requests on rl.RequestId equals r.Id
-                        where r.Status == "APPROVED"
-                        select new
-                        {
-                            p.Id,
-                            Product = p.Name,
-                            rl.Quantity,
-                            p.Price,
-                            LineTotal = p.Price * rl.Quantity
-                        };
-
-            var sortedLines = new SortedList<int, Poline>();
-            foreach (var line in lines)
-            {
-                if (!sortedLines.ContainsKey(line.Id))
-                {
-                    var poline = new Poline()
-                    {
-                        Product = line.Product,
-                        Quantity = 0,
-                        Price = line.Price,
-                        LineTotal = line.LineTotal
-                    };
-                    sortedLines.Add(line.Id, poline);
-                }
-                sortedLines[line.Id].Quantity += line.Quantity;
-            }
-
-            po.Polines = sortedLines.Values;
-
-            po.PoTotal = po.Polines.Sum(line => line.LineTotal);
-
-            return po;
-        }
-
 
         // GET: api/Vendors
         [HttpGet]
